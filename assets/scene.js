@@ -13,6 +13,18 @@
   }
   function lerp(a, b, t) { return a + (b - a) * t; }
 
+  // The Cloudshadow Studios logo cloud and its shadow, pixel for pixel (32 x 15 and 32 x 6).
+  var LOGO = {
+    cols: ["#2a2f4a", "#46508a", "#5c68a8", "#96a5c4", "#becbe0", "#eaf0f8", "#ffffff"],
+    cloud: [ ".............aaaaaa.............", "...........aagggggfaa...........", "..........aagggggfffaa..........", "..........aggggffffffa..........", ".......aaaggggffffffffaaa.......", ".....aaggddgfffffffffddggaaa....", "....aggggffdffffffffdggggffaa...", "...agggfffffdffffffdgggfffffa...", "..aaggffffffddfffffdggfffffffa..", ".aagddffffffedfffeedfffffffdda..", "aggfffdffffeedffeeedffffffdggfaa", "agffffdffeeeedeeeeedfffffdggfffa", "affffedfeeeedeeeeeedfffeedffffea", "aeeeeedeeeeddeeeeeeddeeeedeeeeea", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" ],
+    shadow: [".............cccccc.............", "..........cccccccccccc..........", ".....ccccccccccccccccccccccc....", "...cccccccccccccccccccccccccc...", "cccccccccccccccccccccccccccccccc", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"]
+  };
+  function mixHex(a, b, t) {
+    var A = [1, 3, 5].map(function (i) { return parseInt(a.substr(i, 2), 16); });
+    var B = [1, 3, 5].map(function (i) { return parseInt(b.substr(i, 2), 16); });
+    return "#" + A.map(function (v, i) { var c = Math.round(v + (B[i] - v) * t); return (c < 16 ? "0" : "") + c.toString(16); }).join("");
+  }
+
   var PALETTES = {
     day: {
       sky: ["#2a76c9", "#3887d8", "#4b98e2", "#62aaea", "#7fbdf0", "#a3d2f5", "#c3e3f8"],
@@ -38,6 +50,7 @@
       ],
       tree: { crown: "#1b3f33", crownShade: "#14302a", deep: "#0f2620", trunk: "#2e2a26" },
       cloud: { fill: "#8ea3c4", shade: "#6b80a3" },
+      cloudTint: ["#1a2847", 0.42],
       stars: 0.0045,
       moon: { fill: "#f3edcc", spot: "#d6cfa8" }
     },
@@ -138,8 +151,8 @@
     var crown = add(t.crown, crownShade);
     var trunk = add(t.trunk); shadowOf[trunk] = trunk;
 
-    var cfill = add(pal.cloud.fill), cshade = add(pal.cloud.shade);
-    this.cloudIdx = { fill: cfill, shade: cshade };
+    var tint = pal.cloudTint;
+    this.spriteIdx = LOGO.cols.map(function (c) { return add(tint ? mixHex(c, tint[0], tint[1]) : c); });
 
     this.colors = Uint32Array.from(colors);
     this.shadowOf = Int16Array.from(shadowOf);
@@ -245,33 +258,17 @@
 
   Scene.prototype.makeCloud = function (r, z, x) {
     var H = this.H, W = this.W;
-    var w = Math.round(H * (0.12 + 0.26 * z) * (this.opts.cloudScale || 1));
-    w = Math.max(10, Math.min(w, Math.round(W * 0.5)));
-    var h = Math.max(5, Math.round(w * 0.42));
-    var bumps = [], k = 3 + Math.floor(r() * 2);
-    for (var i = 0; i < k; i++) {
-      var cx = lerp(0.24, 0.76, k === 1 ? 0.5 : i / (k - 1)) * w + (r() - 0.5) * w * 0.08;
-      var rad = w * lerp(0.16, 0.27, r());
-      bumps.push([cx, h - rad * 0.95, rad]);
-    }
+    var scale = z < 0.55 ? 1 : 2;
+    scale = Math.max(1, Math.min(scale, Math.floor((W * 0.42) / 32)));
+    var w = 32 * scale, h = 15 * scale;
     var mask = new Uint8Array(w * h);
     for (var y = 0; y < h; y++) for (var x2 = 0; x2 < w; x2++) {
-      var inside = (y >= h * 0.55 && x2 >= w * 0.08 && x2 <= w * 0.92);
-      for (var b = 0; !inside && b < bumps.length; b++) {
-        var dx = x2 + 0.5 - bumps[b][0], dy = y + 0.5 - bumps[b][1];
-        if (dx * dx + dy * dy <= bumps[b][2] * bumps[b][2]) inside = true;
-      }
-      if (inside) mask[y * w + x2] = 1;
+      var ch = LOGO.cloud[Math.floor(y / scale)][Math.floor(x2 / scale)];
+      if (ch !== ".") mask[y * w + x2] = ch.charCodeAt(0) - 96; // a=1 .. g=7
     }
-    // bottom rim shading
-    for (y = 0; y < h; y++) for (x2 = 0; x2 < w; x2++) {
-      if (!mask[y * w + x2]) continue;
-      var below = y + 2 < h ? mask[(y + 2) * w + x2] : 0;
-      if (!below) mask[y * w + x2] = 2;
-    }
-    var y0 = lerp(H * (0.4 + this.shift), H * 0.05, z) - h / 2;
+    var y0 = lerp(H * (0.4 + this.shift), H * 0.07, z) - h / 2;
     return {
-      x: x, y: Math.round(y0), w: w, h: h, z: z, mask: mask,
+      x: x, y: Math.round(y0), w: w, h: h, z: z, mask: mask, scale: scale,
       speed: lerp(1.0, 3.6, z),
       gy: lerp(H * (0.6 + this.shift), H * 0.97, z),
       wob: r() * 6.28
@@ -280,11 +277,11 @@
 
   Scene.prototype.buildClouds = function () {
     var r = rng(this.seed * 31 + 3), W = this.W;
-    var count = this.opts.clouds !== undefined ? this.opts.clouds : Math.round(W / 70) + 2;
+    var count = this.opts.clouds !== undefined ? this.opts.clouds : Math.round(W / 100) + 2;
     var list = [];
     for (var i = 0; i < count; i++) {
       var z = (i + r() * 0.8) / count;
-      list.push(this.makeCloud(r, 0.15 + z * 0.85, Math.round(r() * (W + 40)) - 20));
+      list.push(this.makeCloud(r, 0.15 + z * 0.85, Math.round(((i * 0.618034) % 1) * (W + 60) + (r() - 0.5) * 20) - 40));
     }
     list.sort(function (a, b) { return a.z - b.z; });
     this.cloudRng = r;
@@ -304,30 +301,27 @@
       }
     }
 
-    // cloud shadows on the land
-    var clouds = this.clouds;
-    for (var c = 0; c < clouds.length; c++) {
-      var cl = clouds[c];
+    // cloud shadows on the land: the logo's stepped shadow, under each cloud
+    var clouds = this.clouds, c, cl;
+    for (c = 0; c < clouds.length; c++) {
+      cl = clouds[c];
+      var sx = cl.scale, sy = Math.max(1, Math.round(cl.scale * 0.6));
       var cx = Math.floor(cl.x) + cl.w / 2 + (cl.gy - (cl.y + cl.h / 2)) * 0.32;
-      var gy = cl.gy;
-      var rx = cl.w * (0.5 + 0.25 * cl.z), ry = Math.max(1.6, rx * (0.12 + 0.12 * cl.z));
-      var x0 = Math.max(0, Math.floor(cx - rx * 1.4)), x1 = Math.min(W - 1, Math.ceil(cx + rx * 1.4));
-      var y0 = Math.max(0, Math.floor(gy - ry * 1.4)), y1 = Math.min(H - 1, Math.ceil(gy + ry * 1.4));
-      for (var y = y0; y <= y1; y++) {
-        for (var x = x0; x <= x1; x++) {
-          var ax = (x - (cx - rx * 0.3)) / rx, ay = (y - gy) / ry;
-          var bx = (x - (cx + rx * 0.35)) / (rx * 0.8), by = (y - gy - ry * 0.25) / (ry * 0.9);
-          var d = Math.min(ax * ax + ay * ay, bx * bx + by * by);
-          if (d >= 1) continue;
-          if (d > 0.7 && ((x + y) & 1)) continue;
+      var left = Math.round(cx - 16 * sx), top = Math.round(cl.gy - 6 * sy);
+      for (var sr = 0; sr < 6 * sy; sr++) {
+        var y = top + sr; if (y < 0 || y >= H) continue;
+        var row = LOGO.shadow[Math.floor(sr / sy)];
+        for (var sc = 0; sc < 32 * sx; sc++) {
+          if (row.charAt(Math.floor(sc / sx)) === ".") continue;
+          var x = left + sc; if (x < 0 || x >= W) continue;
           var p = y * W + x, sh = shadowOf[idx[p]];
           if (sh >= 0) idx[p] = sh;
         }
       }
     }
 
-    // clouds
-    var cf = this.cloudIdx.fill, cs = this.cloudIdx.shade;
+    // clouds: the logo cloud
+    var spr = this.spriteIdx;
     for (c = 0; c < clouds.length; c++) {
       cl = clouds[c];
       var ox = Math.floor(cl.x), oy = cl.y + Math.round(Math.sin(this.t * 0.25 + cl.wob) * 0.6);
@@ -336,7 +330,7 @@
         for (var mx = 0; mx < cl.w; mx++) {
           var m = cl.mask[my * cl.w + mx]; if (!m) continue;
           var px = ox + mx; if (px < 0 || px >= W) continue;
-          idx[py * W + px] = m === 2 ? cs : cf;
+          idx[py * W + px] = spr[m - 1];
         }
       }
     }

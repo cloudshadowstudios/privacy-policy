@@ -60,7 +60,7 @@ img.pixel-art{image-rendering:pixelated}
 .hero canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;z-index:-1}
 .topnav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:20px}
 .topnav .mark{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font:600 1.05rem/1 var(--pixel);text-shadow:2px 2px 0 var(--shadow-ink)}
-.topnav .mark img,.topnav .mark svg{width:32px;height:32px;filter:drop-shadow(2px 2px 0 var(--shadow-ink))}
+.topnav .mark img,.topnav .mark svg{width:32px;height:32px;border-radius:7px;filter:drop-shadow(2px 2px 0 var(--shadow-ink))}
 .topnav ul{display:flex;gap:clamp(14px,3vw,28px);list-style:none;margin:0;padding:0}
 .topnav ul a{color:#fff;text-decoration:none;font:600 1rem/1 var(--pixel);text-shadow:2px 2px 0 var(--shadow-ink);padding:6px 0}
 .topnav ul a:hover{text-decoration:underline;text-underline-offset:6px}
@@ -92,7 +92,9 @@ section.band + section.band{border-top:2px dashed var(--line)}
 .app .links{display:flex;flex-wrap:wrap;gap:8px 22px;margin:16px 0 0;padding:0;list-style:none;font-size:1rem}
 
 .games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px}
-.game canvas{width:100%;aspect-ratio:16/9;image-rendering:pixelated;image-rendering:crisp-edges;display:block;background:var(--paper-2)}
+.game .shot{width:100%;height:auto;aspect-ratio:1434/660;background:var(--paper-2)}
+.game .thumbs{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.game .thumbs img{width:100%;height:auto;aspect-ratio:720/331;background:var(--paper-2)}
 .game h3{margin:20px 0 0;font:600 1.8rem/1.1 var(--pixel)}
 .game .status{display:inline-block;margin-top:10px;padding:4px 10px;font:600 .9rem/1.3 var(--pixel);background:var(--paper-2);color:var(--ink)}
 .game p{margin:12px 0 0;max-width:52ch}
@@ -114,7 +116,7 @@ section.band + section.band{border-top:2px dashed var(--line)}
 .doc-top .bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;padding-block:18px 26px}
 .doc-top a{color:#fff;text-decoration:none}
 .doc-top .mark{display:flex;align-items:center;gap:10px;font:600 1.05rem/1 var(--pixel);text-shadow:2px 2px 0 var(--shadow-ink)}
-.doc-top .mark img,.doc-top .mark svg{width:30px;height:30px;filter:drop-shadow(2px 2px 0 var(--shadow-ink))}
+.doc-top .mark img,.doc-top .mark svg{width:30px;height:30px;border-radius:7px;filter:drop-shadow(2px 2px 0 var(--shadow-ink))}
 .doc-top nav{display:flex;flex-wrap:wrap;gap:6px 20px;font:600 1rem/1.3 var(--pixel);text-shadow:2px 2px 0 var(--shadow-ink)}
 .doc-top nav a[aria-current="page"]{text-decoration:underline;text-underline-offset:6px}
 .doc-top nav a:hover{text-decoration:underline;text-underline-offset:6px}
