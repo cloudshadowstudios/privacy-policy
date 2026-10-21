@@ -10,7 +10,6 @@ Static site served by GitHub Pages (custom domain: cloudshadowstudios.com).
 | `/habitcrawl/` | Habitcrawl page, plus `support/` and `privacy/` |
 | `/little-relay/` | Little Relay page, plus `support/`, `privacy/` and `terms/` |
 | `/privacy/`, `/terms/`, `/support/` | Redirects to the Little Relay pages (old App Store links) |
-| `/habitcrawl/privacy.html`, `/habitcrawl/support.html` | Redirects for the old Habitcrawl file names |
 | `assets/` | Styles, fonts, the pixel-sky script, icons |
 
 To change a policy, edit the text inside `<main>` of the page under the app's folder and update its effective date.
