@@ -1,10 +1,134 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark"><meta name="description" content="Little Relay by Cloud Shadow Studios. Privacy, terms, and support for your family care journal.">
-<title>Care, remembered · Little Relay</title>
-<style>
-:root{color-scheme:light dark;--bg:#f7f5ed;--ink:#203e32;--muted:#56645b;--line:#d8dfd4}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header,main,footer{width:min(100% - 40px,780px);margin:auto}header{padding:32px 0 24px;border-bottom:1px solid var(--line)}.brand{font-weight:750;font-size:23px;text-decoration:none}nav{display:flex;flex-wrap:wrap;gap:24px;margin-top:16px}a{color:inherit;text-underline-offset:4px}a:focus-visible{outline:3px solid currentColor;outline-offset:5px}main{padding:32px 0 48px}h1{font:700 clamp(32px,6vw,46px)/1.16 Georgia,serif;letter-spacing:-.025em;margin:0 0 24px}h2{font-size:23px;line-height:1.3;margin:40px 0 14px}p{margin:0 0 20px;overflow-wrap:anywhere}footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:15px}
-@media(prefers-color-scheme:dark){:root{--bg:#172820;--ink:#f4f2e6;--muted:#bbc7bf;--line:#3c5347}}
-</style></head><body><header><a class="brand" href="./">Little Relay</a><nav aria-label="Site navigation"><a href="./privacy/">Privacy</a><a href="./terms/">Terms</a><a href="./support/">Support</a></nav></header><main><h1>Care, remembered.</h1><p>A calm care journal for parents and caregivers, from pregnancy through toddlerhood.</p><h2>Here to help</h2><p>Find help with records, timers, sharing, and subscriptions on our <a href="support/">support page</a>.</p><p>Read how your information is handled in our <a href="privacy/">privacy policy</a>, or see our <a href="terms/">terms of use</a>.</p></main><footer>Cloud Shadow Studios · <a href="mailto:cloudshadowstudios@gmail.com">Contact support</a></footer></body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloudshadow Studios</title>
+<meta name="description" content="Cloudshadow Studios is an independent studio making games and apps for iPhone, including Habitcrawl and Little Relay.">
+<meta name="theme-color" content="#3c8dd8">
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/mark-180.png">
+<meta property="og:title" content="Cloudshadow Studios">
+<meta property="og:description" content="An independent studio making games and apps for iPhone.">
+<meta property="og:image" content="https://cloudshadowstudios.com/assets/og.png">
+<link rel="preload" href="assets/fonts/pixelify-sans-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/scene.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#apps">Skip to content</a>
+
+<header class="hero">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <nav class="topnav wrap" aria-label="Main">
+    <a class="mark" href="./"><img src="assets/mark.svg" alt="" width="32" height="32"><span>Cloudshadow Studios</span></a>
+    <ul>
+      <li><a href="#apps">Apps</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#help">Help</a></li>
+    </ul>
+  </nav>
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1><span>Cloudshadow</span> <span>Studios</span></h1>
+      <p>An independent studio making games and apps for iPhone.</p>
+      <div class="ctas">
+        <a class="btn px" href="#apps">See our apps</a>
+        <a class="btn alt px" href="#help">Get help</a>
+      </div>
+    </div>
+  </div>
+  <button class="pause" id="pause-sky" type="button" aria-pressed="false" hidden>Pause clouds</button>
+</header>
+
+<main>
+  <section class="band" id="apps" aria-labelledby="apps-h">
+    <div class="wrap">
+      <h2 id="apps-h">Apps</h2>
+      <p class="lede">Both are on the App Store now.</p>
+      <div class="apps">
+        <article class="app" id="habitcrawl">
+          <div class="icon"><img src="assets/icons/habitcrawl.png" alt="Habitcrawl app icon" width="128" height="128"></div>
+          <div>
+            <h3>Habitcrawl</h3>
+            <p class="what">Most habit trackers give you a checkmark. Habitcrawl gives you a sword. Every habit you finish becomes a card, and each night your hero takes on one floor of the dungeon with the hand you built that day. Seven floors, one boss, every week.</p>
+            <p class="meta">For iPhone and Apple Watch. Works with Apple Health, Siri and Home Screen widgets. No ads, no account.</p>
+            <ul class="links">
+              <li><a href="https://apps.apple.com/us/search?term=Habitcrawl" data-store="habitcrawl">Get it on the App Store</a></li>
+              <li><a href="habitcrawl/support/">Support</a></li>
+              <li><a href="habitcrawl/privacy/">Privacy policy</a></li>
+            </ul>
+          </div>
+        </article>
+        <article class="app" id="little-relay">
+          <div class="icon"><img src="assets/icons/little-relay.png" alt="Little Relay app icon" width="128" height="128"></div>
+          <div>
+            <h3>Little Relay</h3>
+            <p class="what">A calm care journal for parents and caregivers, from pregnancy through toddlerhood. Log feeds, sleep and diapers with one thumb, see the patterns, and hand off care to a partner without the texts.</p>
+            <p class="meta">For iPhone and Apple Watch. Free to use, with a Family plan for shared care.</p>
+            <ul class="links">
+              <li><a href="https://apps.apple.com/us/search?term=Little%20Relay" data-store="little-relay">Get it on the App Store</a></li>
+              <li><a href="little-relay/support/">Support</a></li>
+              <li><a href="little-relay/privacy/">Privacy policy</a></li>
+              <li><a href="little-relay/terms/">Terms of use</a></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="games" aria-labelledby="games-h">
+    <div class="wrap">
+      <h2 id="games-h">Games</h2>
+      <p class="lede">Two games in development for iPhone.</p>
+      <div class="games">
+        <article class="game">
+          <div class="px"><canvas data-scene="dusk" data-seed="21" data-clouds="3" aria-hidden="true"></canvas></div>
+          <h3>Wildline</h3>
+          <span class="status">In development</span>
+          <p>A side-scrolling parkour run through America's national parks. Two buttons and real moves: kong vaults, wall runs, tic-tacs and rolls, through rain, snow, dusk and full moons.</p>
+        </article>
+        <article class="game">
+          <div class="px"><canvas data-scene="bog" data-seed="9" data-clouds="3" aria-hidden="true"></canvas></div>
+          <h3>Bog Blitz</h3>
+          <span class="status">In development</span>
+          <p>A retro obstacle run across three sports. Mountain bike the hills, kayak the rapids, then leave the waterfall in a wingsuit.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="help" aria-labelledby="help-h">
+    <div class="wrap">
+      <h2 id="help-h">Help and privacy</h2>
+      <p class="lede">Support pages, privacy policies and terms for each app.</p>
+      <div class="help">
+        <dl>
+          <div class="row">
+            <dt>Habitcrawl</dt>
+            <dd><a href="habitcrawl/support/">Support</a><a href="habitcrawl/privacy/">Privacy policy</a></dd>
+          </div>
+          <div class="row">
+            <dt>Little Relay</dt>
+            <dd><a href="little-relay/support/">Support</a><a href="little-relay/privacy/">Privacy policy</a><a href="little-relay/terms/">Terms of use</a></dd>
+          </div>
+        </dl>
+        <div class="contact">
+          <p>Found a bug or have an idea? Email us with your iPhone model and the app version.</p>
+          <p><a class="email" href="mailto:cloudshadowstudios@gmail.com">cloudshadowstudios@gmail.com</a></p>
+          <p>We usually reply within 2 business days.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>© 2026 Cloudshadow Studios</span>
+    <span>This site has no ads, analytics or tracking.</span>
+  </div>
+</footer>
+</body>
+</html>
