@@ -42,7 +42,7 @@
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 body{margin:0;background:var(--paper);color:var(--ink);font:400 1.125rem/1.6 var(--text);overflow-x:hidden}
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 a{color:var(--link);text-decoration-thickness:.08em;text-underline-offset:.2em}
 a:hover{text-decoration-thickness:.16em}
 :focus-visible{outline:3px solid var(--focus);outline-offset:3px}
