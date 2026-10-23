@@ -91,6 +91,18 @@ section.band + section.band{border-top:2px dashed var(--line)}
 .app .meta{margin:10px 0 0;color:var(--muted);font-size:1rem}
 .app .links{display:flex;flex-wrap:wrap;gap:8px 22px;margin:16px 0 0;padding:0;list-style:none;font-size:1rem}
 
+.upcoming{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(32px,6vw,72px);align-items:center}
+.up-head{display:flex;gap:clamp(16px,3vw,24px);align-items:center}
+.up-head .icon{width:clamp(72px,10vw,96px);aspect-ratio:1;flex:none;border-radius:22.5%;overflow:hidden;box-shadow:0 0 0 1px rgb(0 0 0 / .08)}
+.up-head .icon img{width:100%;height:100%}
+.up-head h3{margin:0;font:600 clamp(1.6rem,3.6vw,2.1rem)/1.1 var(--pixel)}
+.up-head .status{display:inline-block;margin-top:8px;padding:4px 10px;font:600 .9rem/1.3 var(--pixel);background:var(--paper-2);color:var(--ink)}
+.upcoming .what{margin:20px 0 0;max-width:56ch}
+.upcoming .meta{margin:10px 0 0;max-width:56ch;color:var(--muted);font-size:1rem}
+.upcoming .widget{margin-top:28px;width:min(100%,420px);border-radius:22px;box-shadow:0 0 0 1px var(--line)}
+.phone-tall{width:clamp(200px,22vw,270px);padding:3%;background:#1b1d22;border-radius:14%/6.6%;box-shadow:inset 0 0 0 2px #3b3f47}
+.phone-tall img{display:block;width:100%;aspect-ratio:600/1304;border-radius:11.5%/5.3%;background:#000}
+@media (max-width:720px){.upcoming{grid-template-columns:1fr}.phone-tall{margin-inline:auto;width:min(240px,70vw)}}
 .games{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:40px}
 .game .phone{position:relative;padding:2.4%;background:#1b1d22;border-radius:7.5%/16.3%;box-shadow:inset 0 0 0 2px #3b3f47,0 1px 0 rgb(0 0 0 / .08)}
 .game .phone img{display:block;width:100%;height:auto;aspect-ratio:19.5/9;object-fit:cover;border-radius:5.6%/12.2%;background:#000}
