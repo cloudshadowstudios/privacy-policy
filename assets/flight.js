@@ -168,6 +168,12 @@
       inner.appendChild(svg); wrap.appendChild(inner); range.appendChild(wrap);
       layers.push({ L: L, el: wrap, s1: s1, s2: s2, snow: snow, shadow: shadow, blurG: shadow ? shadow.parentNode : null });
       if (i === 2 && cloud) range.appendChild(cloud); // the cloud floats in front of the far ranges
+      if (i === 1) {
+        // the scroll ends with the cloud resting over this range's highest peak near the middle
+        var best = { x: W * 0.6, y: H };
+        for (var px = W * 0.3; px <= W * 0.58; px += 2) { var py = ridgeY(L, px); if (py < best.y) best = { x: px, y: py }; }
+        L.peak = best;
+      }
     });
     if (!built) {
       built = true;
@@ -195,8 +201,8 @@
     root.setProperty("--sky-mid", tri(SKY.mid, l));
     root.setProperty("--sky-low", tri(SKY.low, l));
     root.setProperty("--stars", String(clamp(1 - l * 2.2, 0, 1)));
-    root.setProperty("--sun-y", (reduce.matches ? 24 : 76 - 54 * smooth(p, 0, 0.85)) + "%");
-    root.setProperty("--sun-x", (64 + 6 * p) + "%");
+    root.setProperty("--sun-y", (reduce.matches ? 20 : 76 - 56 * smooth(p, 0, 0.85)) + "%");
+    root.setProperty("--sun-x", (reduce.matches ? 84 : 64 + 20 * smooth(p, 0.1, 0.9)) + "%");
     root.setProperty("--sun-core", tri(["#ff9f5a", "#ffd39a", "#fff6dc"], l));
 
     if (reduce.matches) {
@@ -213,18 +219,26 @@
       root.setProperty("--cue-o", String(1 - smooth(p, 0, 0.06)));
     }
 
-    // the cloud: carried across by scroll, drifting a little on its own
-    var drift = reduce.matches ? 0 : ((now - t0) / 1000) * 9;
-    var cw = cloud ? cloud.offsetWidth : 300;
-    var cx = (vw * 0.18 + p * vw * 0.95 + drift) % (vw + cw * 2) - cw;
-    var cy = vh * (0.17 - 0.05 * p);
-    var co = (0.92 - 0.25 * smooth(p, 0.6, 1));
+    // the cloud: drifts in from the left and comes to rest over the big peak, casting its shadow
+    var unit = H / vh; // px -> svg units
+    var k = reduce.matches ? 1 : smooth(p, 0, 0.94);
+    var cs = 1 + 0.28 * k;
+    var cw = (cloud ? cloud.offsetWidth : 300) * cs, ch = (cloud ? cloud.offsetHeight : 110) * cs;
+    var pk = LAYERS[1].peak || { x: W * 0.6, y: H * 0.4 };
+    var s1 = 1 + LAYERS[1].d * 1.1, ty1 = LAYERS[1].d * 14 * vh / 100;
+    var peakX = vw / 2 + (pk.x / unit - vw / 2) * s1;
+    var peakY = vh + (pk.y / unit - vh) * s1 + ty1;
+    var endCx = peakX, endTop = Math.max(vh * 0.07, peakY - ch - vh * 0.09);
+    var sway = reduce.matches ? 0 : Math.sin((now - t0) / 4200) * 10 * (1 - 0.6 * k);
+    var cx = clamp((vw * 0.08 + (endCx - vw * 0.08) * k) - cw / 2 + sway, -cw * 0.4, vw - cw - vw * 0.02);
+    var cy = vh * 0.15 + (endTop - vh * 0.15) * k;
+    var co = 0.94;
+    root.setProperty("--cloud-s", cs.toFixed(3));
     root.setProperty("--cloud-x", cx + "px");
     root.setProperty("--cloud-y", cy + "px");
     root.setProperty("--cloud-o", String(co));
     if (cloud) cloud.style.color = tri(["#8e8fb0", "#f6d6cf", "#ffffff"], l);
 
-    var unit = H / vh; // px -> svg units
     for (var i = 0; i < layers.length; i++) {
       var o = layers[i], L = o.L, d = L.d;
       var s, tx, ty, op = 1;
@@ -248,13 +262,13 @@
       if (o.shadow) {
         // where the cloud is over this layer, in the layer's own coordinates
         var ox = vw / 2, oy = vh;
-        var sxPx = ox + (cx + cw * 0.5 - vw * 0.06 - tx - ox) / s;
+        var sxPx = ox + (cx + cw * 0.5 - tx - ox) / s;
         var sx = sxPx * unit;
         var gy = ridgeY(L, sx) + H * 0.06;
         var rx = cw * unit * 0.55 / s, ryy = H * 0.085;
         // the group is a unit shape scaled into place, so the three parts stay together
         o.shadow.setAttribute("transform", "translate(" + sx.toFixed(1) + " " + gy.toFixed(1) + ") scale(" + rx.toFixed(1) + " " + ryy.toFixed(1) + ")");
-        o.blurG.setAttribute("opacity", (0.42 * co * (0.6 + 0.4 * l)).toFixed(3));
+        o.blurG.setAttribute("opacity", (0.5 * co * (0.55 + 0.45 * l)).toFixed(3));
       }
     }
 
