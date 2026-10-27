@@ -194,8 +194,8 @@
     var ccx = cw * (0.12 + 0.38 * k);
     var ctop = chh * (0.15 - 0.05 * k);
     // its shadow: first on the far slopes, then front and centre on the valley floor
-    var shW = cwid * (0.95 + 0.45 * k), shH = shW * (0.2 + 0.08 * k);
-    var shX = ccx, shY = chh * (0.56 + 0.14 * k);
+    var shW = cwid * (0.95 + 0.45 * k), shH = shW * (0.2 + 0.04 * k);
+    var shX = ccx, shY = chh * (0.56 - 0.09 * k);
 
     for (var i = 0; i < LAYERS.length; i++) {
       var L = LAYERS[i], T = layerTransform(L, p);
