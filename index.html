@@ -4,71 +4,96 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cloudshadow Studios</title>
-<meta name="description" content="Cloudshadow Studios is an independent studio making games and apps for iPhone, including Habitcrawl and Little Relay.">
-<meta name="theme-color" content="#3c8dd8">
+<meta name="description" content="Cloudshadow Studios makes useful apps and games with the outdoors in mind, including Habitcrawl, Little Relay and Mountain Window.">
+<meta name="theme-color" content="#1c2b3a">
 <link rel="icon" href="assets/icon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/mark-180.png">
 <meta property="og:title" content="Cloudshadow Studios">
-<meta property="og:description" content="An independent studio making games and apps for iPhone.">
+<meta property="og:description" content="Useful apps and games, made with the outdoors in mind.">
 <meta property="og:image" content="https://cloudshadowstudios.com/assets/og.png">
-<link rel="preload" href="assets/fonts/pixelify-sans-latin-600.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=mw1">
-<script src="assets/scene.js?v=mw1" defer></script>
+<meta property="og:url" content="https://cloudshadowstudios.com/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preload" href="assets/fonts/newsreader-latin-opsz.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css?v=alp1">
+<script src="assets/flight.js?v=alp1" defer></script>
 </head>
-<body>
+<body class="home">
 <a class="skip" href="#apps">Skip to content</a>
 
-<header class="hero">
-  <canvas id="sky" aria-hidden="true"></canvas>
-  <nav class="topnav wrap" aria-label="Main">
-    <a class="mark" href="./"><img src="assets/icon-128.png" alt="" width="32" height="32"><span>Cloudshadow Studios</span></a>
-    <ul>
-      <li><a href="#apps">Apps</a></li>
-      <li><a href="#upcoming">Coming soon</a></li>
-      <li><a href="#games">Games</a></li>
-      <li><a href="#help">Help</a></li>
-    </ul>
-  </nav>
-  <div class="wrap">
-    <div class="hero-copy">
-      <h1><span>Cloudshadow</span> <span>Studios</span></h1>
-      <p>An independent studio making games and apps for iPhone.</p>
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="./" aria-label="Cloudshadow Studios home"><img src="assets/logo-cloud.svg" alt="" width="34" height="25"><span>Cloudshadow Studios</span></a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#apps">Apps</a></li>
+        <li><a href="#upcoming">Coming soon</a></li>
+        <li><a href="#games">Games</a></li>
+        <li><a href="#studio">Studio</a></li>
+        <li><a href="#help">Help</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<section class="flight" id="flight" aria-label="Cloudshadow Studios">
+  <div class="stage">
+    <div class="sky" aria-hidden="true"></div>
+    <div class="stars" aria-hidden="true"></div>
+    <div class="sun" aria-hidden="true"></div>
+    <div class="cloud" aria-hidden="true"></div>
+    <div class="range" id="range" aria-hidden="true"></div>
+
+    <div class="hero-copy" id="heroTitle">
+      <h1>Cloudshadow<br>Studios</h1>
+      <p>Useful apps and games, made with the outdoors in mind.</p>
+    </div>
+
+    <div class="arrive" id="heroArrive">
+      <p class="arrive-line">Everyday apps and adventure games, built for people who’d rather be outside.</p>
       <div class="ctas">
-        <a class="btn px" href="#apps">See our apps</a>
-        <a class="btn alt px" href="#help">Get help</a>
+        <a class="btn primary" href="#apps">See our apps</a>
+        <a class="btn ghost" href="#studio">Meet the studio</a>
       </div>
     </div>
+
+    <p class="cue" id="cue" aria-hidden="true"><span>Scroll</span></p>
   </div>
-  <button class="pause" id="pause-sky" type="button" aria-pressed="false" hidden>Pause clouds</button>
-</header>
+  <div class="flight-edge" aria-hidden="true"></div>
+</section>
 
 <main>
   <section class="band" id="apps" aria-labelledby="apps-h">
     <div class="wrap">
-      <h2 id="apps-h">Apps</h2>
-      <p class="lede">Both are on the App Store now.</p>
+      <header class="sec-head">
+        <h2 id="apps-h">Apps</h2>
+        <p>On the App Store now.</p>
+      </header>
       <div class="apps">
-        <article class="app" id="habitcrawl">
-          <div class="icon"><img class="pixel-art" src="assets/icons/habitcrawl.png" alt="Habitcrawl app icon" width="128" height="128"></div>
-          <div>
+        <article class="app">
+          <div class="app-id">
+            <img class="icon pixel-art" src="assets/icons/habitcrawl.png" alt="Habitcrawl app icon" width="128" height="128">
             <h3>Habitcrawl</h3>
+          </div>
+          <div class="app-body">
             <p class="what">Most habit trackers give you a checkmark. Habitcrawl gives you a sword. Every habit you finish becomes a card, and each night your hero takes on one floor of the dungeon with the hand you built that day. Seven floors, one boss, every week.</p>
             <p class="meta">For iPhone and Apple Watch. Works with Apple Health, Siri and Home Screen widgets. No ads, no account.</p>
             <ul class="links">
-              <li><a href="https://apps.apple.com/us/app/habitcrawl/id6817175970" data-store="habitcrawl">Get it on the App Store</a></li>
+              <li><a class="store" href="https://apps.apple.com/us/app/habitcrawl/id6817175970">Get it on the App Store</a></li>
               <li><a href="habitcrawl/support/">Support</a></li>
               <li><a href="habitcrawl/privacy/">Privacy policy</a></li>
             </ul>
           </div>
         </article>
-        <article class="app" id="little-relay">
-          <div class="icon"><img src="assets/icons/little-relay.png" alt="Little Relay app icon" width="128" height="128"></div>
-          <div>
+        <article class="app">
+          <div class="app-id">
+            <img class="icon" src="assets/icons/little-relay.png" alt="Little Relay app icon" width="128" height="128">
             <h3>Little Relay</h3>
+          </div>
+          <div class="app-body">
             <p class="what">A calm care journal for parents and caregivers, from pregnancy through toddlerhood. Log feeds, sleep and diapers with one thumb, see the patterns, and hand off care to a partner without the texts.</p>
             <p class="meta">For iPhone and Apple Watch. Free to use, with a Family plan for shared care.</p>
             <ul class="links">
-              <li><a href="https://apps.apple.com/us/app/little-relay/id6819379345" data-store="little-relay">Get it on the App Store</a></li>
+              <li><a class="store" href="https://apps.apple.com/us/app/little-relay/id6819379345">Get it on the App Store</a></li>
               <li><a href="little-relay/support/">Support</a></li>
               <li><a href="little-relay/privacy/">Privacy policy</a></li>
               <li><a href="little-relay/terms/">Terms of use</a></li>
@@ -79,78 +104,86 @@
     </div>
   </section>
 
-  <section class="band" id="upcoming" aria-labelledby="upcoming-h">
-    <div class="wrap">
-      <h2 id="upcoming-h">Coming soon</h2>
-      <p class="lede">The next app from the studio.</p>
-      <div class="upcoming">
-        <div class="up-copy">
-          <div class="up-head">
-            <div class="icon"><img src="assets/icons/mountain-window.png" alt="Mountain Window app icon" width="128" height="128"></div>
-            <div>
-              <h3>Mountain Window</h3>
-              <span class="status">Coming soon</span>
-            </div>
-          </div>
-          <p class="what">Find the best weather window for your next outing. Pick a place and an activity, like hiking, mountain biking, camping or paragliding, and Mountain Window ranks the hours ahead by rain, wind, temperature and daylight. It also tells you when to leave and what to pack.</p>
-          <p class="meta">For iPhone, iPad and Mac, with Home Screen widgets. Mountain forecasts include freezing level, summit wind and storm potential.</p>
-          <img class="widget" src="assets/games/mountain-window-widget.webp" alt="Weather Window widget showing the best three-hour hiking window in Chamonix, tomorrow 9 AM to 12 PM, with the top three windows ranked" width="784" height="396" loading="lazy">
+  <section class="band tint" id="upcoming" aria-labelledby="upcoming-h">
+    <div class="wrap upcoming">
+      <div class="up-copy">
+        <header class="sec-head">
+          <h2 id="upcoming-h">Coming soon</h2>
+        </header>
+        <div class="app-id">
+          <img class="icon" src="assets/icons/mountain-window.png" alt="Mountain Window app icon" width="128" height="128">
+          <h3>Mountain Window</h3>
         </div>
-        <div class="phone-tall"><img src="assets/games/mountain-window-today.webp" alt="Mountain Window's Today screen for Chamonix, showing the summit forecast and the Before you go checklist" width="600" height="1304" loading="lazy"></div>
+        <p class="what">Find the best weather window for your next outing. Pick a place and an activity, like hiking, mountain biking, camping or paragliding, and Mountain Window ranks the hours ahead by rain, wind, temperature and daylight. It also tells you when to leave and what to pack.</p>
+        <p class="meta">For iPhone, iPad and Mac, with Home Screen widgets. Mountain forecasts include freezing level, summit wind and storm potential.</p>
+        <img class="widget" src="assets/games/mountain-window-widget.webp" alt="Weather Window widget showing the best three-hour hiking window in Chamonix, tomorrow 9 AM to 12 PM, with the top three windows ranked" width="784" height="396" loading="lazy">
       </div>
+      <div class="phone-tall"><img src="assets/games/mountain-window-today.webp" alt="Mountain Window’s Today screen for Chamonix, showing the summit forecast and the Before you go checklist" width="600" height="1304" loading="lazy"></div>
     </div>
   </section>
 
   <section class="band" id="games" aria-labelledby="games-h">
     <div class="wrap">
-      <h2 id="games-h">Games</h2>
-      <p class="lede">Two games in development for iPhone.</p>
+      <header class="sec-head">
+        <h2 id="games-h">Games</h2>
+        <p>In development for iPhone.</p>
+      </header>
       <div class="games">
         <article class="game">
-          <div class="phone"><img src="assets/games/wildline-title.webp" alt="Wildline title screen: a runner on a trail below Yosemite's granite walls, with the Wildline badge and the main menu" width="1434" height="660" loading="lazy"></div>
+          <div class="phone"><img src="assets/games/wildline-title.webp" alt="Wildline title screen: a runner on a trail below Yosemite’s granite walls, with the Wildline badge and the main menu" width="1434" height="660" loading="lazy"></div>
           <h3>Wildline</h3>
-          <span class="status">In development</span>
-          <p>A side-scrolling parkour run through America's national parks. Two buttons and real moves: kong vaults, wall runs, tic-tacs and rolls, through rain, snow, dusk and full moons.</p>
+          <p>A side-scrolling parkour run through America’s national parks. Two buttons and real moves: kong vaults, wall runs, tic-tacs and rolls, through rain, snow, dusk and full moons.</p>
         </article>
         <article class="game">
           <div class="phone"><img src="assets/games/bog-blitz-title.webp" alt="Bog Blitz title screen: a mountain biker on a lakeside trail under the Bog Blitz logo" width="1434" height="660" loading="lazy"></div>
           <h3>Bog Blitz</h3>
-          <span class="status">In development</span>
           <p>A retro obstacle run across three sports. Mountain bike the hills, kayak the rapids, then leave the waterfall in a wingsuit.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="band" id="help" aria-labelledby="help-h">
-    <div class="wrap">
-      <h2 id="help-h">Help and privacy</h2>
-      <p class="lede">Support pages, privacy policies and terms for each app.</p>
-      <div class="help">
-        <dl>
-          <div class="row">
-            <dt>Habitcrawl</dt>
-            <dd><a href="habitcrawl/support/">Support</a><a href="habitcrawl/privacy/">Privacy policy</a></dd>
-          </div>
-          <div class="row">
-            <dt>Little Relay</dt>
-            <dd><a href="little-relay/support/">Support</a><a href="little-relay/privacy/">Privacy policy</a><a href="little-relay/terms/">Terms of use</a></dd>
-          </div>
-        </dl>
-        <div class="contact">
-          <p>Found a bug or have an idea? Email us with your iPhone model and the app version.</p>
-          <p><a class="email" href="mailto:support@cloudshadowstudios.com">support@cloudshadowstudios.com</a></p>
-          <p>We usually reply within 2 business days.</p>
-        </div>
+  <section class="band studio" id="studio" aria-labelledby="studio-h">
+    <div class="wrap studio-in">
+      <div class="studio-copy">
+        <h2 id="studio-h">The studio</h2>
+        <p class="studio-lead">A cloud’s shadow is even less real than the cloud. Sun, air, water and the shape of the land all have to come together for it to exist, and for a moment it travels freely over mountains and valleys before it’s gone.</p>
+        <p>That’s what we named the studio after.</p>
+        <p>We make two kinds of things. Everyday apps that take a small job off your plate, like keeping a habit going or keeping track of a newborn’s night. And apps and games about the places we’d rather be: a weather window for a big day out, a parkour run through the national parks, a bike, a kayak and a wingsuit.</p>
+        <p>Your information stays on your own devices and in your own iCloud. Habitcrawl and Little Relay have no ads and no tracking.</p>
       </div>
+      <figure class="studio-mark">
+        <img src="assets/logo-cloud.svg" alt="The Cloudshadow Studios logo: a pixel cloud above its shadow" width="340" height="250" loading="lazy">
+      </figure>
+    </div>
+  </section>
+
+  <section class="band" id="help" aria-labelledby="help-h">
+    <div class="wrap help">
+      <div>
+        <h2 id="help-h">Help and privacy</h2>
+        <p class="help-note">Found a bug or have an idea? Email us with your iPhone model and the app version. We usually reply within 2 business days.</p>
+        <p><a class="email" href="mailto:support@cloudshadowstudios.com">support@cloudshadowstudios.com</a></p>
+      </div>
+      <dl class="help-list">
+        <div class="row">
+          <dt>Habitcrawl</dt>
+          <dd><a href="habitcrawl/support/">Support</a><a href="habitcrawl/privacy/">Privacy policy</a></dd>
+        </div>
+        <div class="row">
+          <dt>Little Relay</dt>
+          <dd><a href="little-relay/support/">Support</a><a href="little-relay/privacy/">Privacy policy</a><a href="little-relay/terms/">Terms of use</a></dd>
+        </div>
+      </dl>
     </div>
   </section>
 </main>
 
-<footer class="site-foot">
-  <div class="wrap">
-    <span>© 2026 Cloudshadow Studios</span>
-    <span>This site has no ads, analytics or tracking.</span>
+<footer class="foot">
+  <div class="foot-ridge" aria-hidden="true"></div>
+  <div class="wrap foot-in">
+    <a class="brand" href="./"><img src="assets/logo-cloud.svg" alt="" width="34" height="25"><span>Cloudshadow Studios</span></a>
+    <p>© 2026 Cloudshadow Studios. This site has no ads, analytics or tracking.</p>
   </div>
 </footer>
 </body>
