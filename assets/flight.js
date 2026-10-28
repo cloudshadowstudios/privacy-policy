@@ -74,7 +74,7 @@
   ];
   var STARS = (function () { var r = rng(0.42), a = []; for (var i = 0; i < 110; i++) a.push([r(), r() * 0.55, 0.5 + r() * 1.1, 0.35 + r() * 0.65]); return a; })();
 
-  var W = 1000, H = 1000, cw = 0, chh = 0, dpr = 1, paths = [], ridges = [], details = [], cloudSprites = null, shadowSprite = null;
+  var W = 1000, H = 1000, cw = 0, chh = 0, dpr = 1, paths = [], ridges = [], details = [], cloudSprites = null, shadowField = null;
 
   // ---------- terrain ----------
   // Summits with concave flanks, like a real range, plus a little rough edge
@@ -174,6 +174,8 @@
     }
     var forA = new Float32Array(bw * bh), shadeA = new Float32Array(bw * bh), snowA = new Float32Array(bw * bh), maskA = new Float32Array(bw * bh), depthA = new Float32Array(bw * bh);
     var P = alpine ? peaksFor(L) : null, baseAlt = H * (1 - L.base);
+    // the main wall also keeps its relief, so the cloud's shadow can drape over it
+    var keep = li === 1, rel = keep ? new Float32Array(bw * bh) : null, rec = keep ? new Uint8Array(bw * bh) : null;
     function prof(pk, x) { var d = x - pk.x, w = d < 0 ? pk.wl : pk.wr; d = Math.abs(d); return d < w ? pk.h * Math.pow(1 - d / w, d === 0 ? 1 : (x < pk.x ? pk.kl : pk.kr)) : -1; }
     function column(px) {
       var x = px / u;
@@ -189,7 +191,7 @@
           var xd = x - (noise1(y * 0.012 + s * 2 + x * 0.002) - 0.5) * tt * 0.32;
           var best = -1, pk = null;
           for (var q = 0; q < P.length; q++) { var v = prof(P[q], xd); if (v > best) { best = v; pk = P[q]; } }
-          if (!pk) { shadeA[i] = -0.3; continue; }
+          if (!pk) { shadeA[i] = -0.3; if (keep) { rel[i] = -75; rec[i] = maskA[i] * 70; } continue; }
           var dx = xd - pk.x;
           var lit = smooth(dx, -1.5, 1.5); // sun from the right: right-hand faces are lit
           var sh = -0.72 + 1.5 * lit;
@@ -208,6 +210,13 @@
           if (L.style === "teton") { // forest climbs the lower slopes, ragged at the treeline
             var tl = baseAlt + L.amp * H * (0.12 + 0.1 * noise1(x * 0.03 + s) + 0.05 * noise1(x * 0.2 + s * 3));
             forA[i] = smooth(tl - (H - y), -3, 3);
+          }
+          if (keep) {
+            // spurs stand out toward us, faces fall back from them, gullies cut in
+            rel[i] = -Math.min(Math.abs(dx), 150) * 0.5 + (noise2(along * 2.6 + s * 9, tt * 0.025) - 0.5) * 24;
+            // a shadow takes away sunlight: strong on lit rock and snow, faint on faces already in shade
+            var lf = shadeA[i] * 0.5 + 0.5;
+            rec[i] = maskA[i] * clamp(0.18 + 0.82 * lf + 0.2 * snowA[i] - 0.35 * forA[i], 0, 1) * 255;
           }
         } else {
           var sl = slopeAt(x, tt);
@@ -252,20 +261,18 @@
       return c;
     }
     // work in short slices so the page keeps animating while this paints
-    var px = 0, looks = [];
+    var px = 0, looks = [], blurred = !keep;
     return {
       step: function (until) {
         while (px < bw && performance.now() < until) column(px++);
         if (px < bw) return null;
+        if (!blurred) { boxBlur(rel, bw, bh, 3, 2); blurred = true; return null; }
         if (looks.length < LOOK.length) { var c = colourStep(looks.length, until); if (c) looks.push(c); return null; }
-        return { looks: looks, minY: minY };
+        return { looks: looks, minY: minY, u: u, bw: bw, bh: bh, rel: rel, rec: rec };
       }
     };
   }
 
-  // The logo cloud, painted smooth: same outline and puffs as the pixel logo, softened.
-  var LOGO_CLOUD = [".............aaaaaa.............", "...........aagggggfaa...........", "..........aagggggfffaa..........", "..........aggggffffffa..........", ".......aaaggggffffffffaaa.......", ".....aaggddgfffffffffddggaaa....", "....aggggffdffffffffdggggffaa...", "...agggfffffdffffffdgggfffffa...", "..aaggffffffddfffffdggfffffffa..", ".aagddffffffedfffeedfffffffdda..", "aggfffdffffeedffeeedffffffdggfaa", "agffffdffeeeedeeeeedfffffdggfffa", "affffedfeeeedeeeeeedfffeedffffea", "aeeeeedeeeeddeeeeeeddeeeedeeeeea", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"];
-  var LOGO_SHADOW = [".............cccccc.............", "..........cccccccccccc..........", ".....ccccccccccccccccccccccc....", "...cccccccccccccccccccccccccc...", "cccccccccccccccccccccccccccccccc", "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"];
   var CLOUD = { w: 432, h: 228 };
   function boxBlur(A, w, h, r, passes) {
     var B = new Float32Array(w * h);
@@ -275,55 +282,112 @@
     }
     return A;
   }
-  function gridToField(rows, scale, pad, toneOf) {
-    var gw = rows[0].length, gh = rows.length, w = gw * scale + pad * 2, h = gh * scale + pad * 2;
-    var M = new Float32Array(w * h), T = new Float32Array(w * h);
-    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
-      var gx = Math.floor((x - pad) / scale), gy = Math.floor((y - pad) / scale);
-      if (gx < 0 || gy < 0 || gx >= gw || gy >= gh) continue;
-      var ch = rows[gy].charAt(gx);
-      if (ch === ".") continue;
-      M[y * w + x] = 1; if (toneOf) T[y * w + x] = toneOf(ch);
-    }
-    return { w: w, h: h, M: M, T: T };
-  }
+  // The cloud: round puffs laid out like the logo cloud, with a rounded, scalloped underside.
+  // Units are logo pixels (the logo cloud is 32 wide, 15 tall).
+  var PUFFS = [
+    [15.6, 5.4, 5.3], [9.2, 7.9, 4.4], [22.4, 7.8, 4.7], [4.2, 10.9, 3.5], [27.6, 10.8, 3.7],
+    [7.6, 11.9, 3.5], [12.8, 12.4, 3.8], [18.6, 12.5, 3.8], [23.8, 11.9, 3.6], [15.6, 9.6, 4.6]
+  ];
   function buildClouds() {
-    var TONE = { g: 1, f: 0.84, e: 0.6, d: 0.42, a: 0.6 };
-    var F = gridToField(LOGO_CLOUD, 12, 24, function (c) { return TONE[c] || 0.6; });
-    var w = F.w, h = F.h;
-    for (var i = 0; i < w * h; i++) F.T[i] *= F.M[i];
-    boxBlur(F.M, w, h, 7, 3); boxBlur(F.T, w, h, 7, 3);
+    var sc = 12, pad = 10, minX = 1e9, maxX = -1e9, minY = 1e9, maxY = -1e9;
+    PUFFS.forEach(function (q) { minX = Math.min(minX, q[0] - q[2]); maxX = Math.max(maxX, q[0] + q[2]); minY = Math.min(minY, q[1] - q[2]); maxY = Math.max(maxY, q[1] + q[2]); });
+    var w = Math.ceil((maxX - minX) * sc + pad * 2), h = Math.ceil((maxY - minY) * sc + pad * 2);
     CLOUD.w = w; CLOUD.h = h;
+    // one blended surface over all the puffs, so it reads as a single cloud rather than balls
+    var alphaA = new Float32Array(w * h), Z = new Float32Array(w * h), kk = 1.6;
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+      var ux = (x - pad) / sc + minX, uy = (y - pad) / sc + minY, cover = 0, sum = 0;
+      for (var k = 0; k < PUFFS.length; k++) {
+        var q = PUFFS[k], dx = (ux - q[0]) / q[2], dy = (uy - q[1]) / q[2], d2 = dx * dx + dy * dy;
+        var c = smooth(1 - Math.sqrt(d2), -0.012, 0.03);
+        if (c > cover) cover = c;
+        if (d2 < 1) sum += Math.exp(kk * q[2] * Math.sqrt(1 - d2));
+      }
+      var i = y * w + x;
+      alphaA[i] = cover;
+      Z[i] = sum > 0 ? Math.log(sum) / kk : 0;
+    }
+    boxBlur(Z, w, h, 3, 2);
+    var LX = 0.45, LY = -0.75, LZ = 0.5, lightA = new Float32Array(w * h), st = 2 / sc;
+    for (var y2 = 1; y2 < h - 1; y2++) for (var x2 = 1; x2 < w - 1; x2++) {
+      var j = y2 * w + x2;
+      var gx = (Z[j + 1] - Z[j - 1]) / st, gy = (Z[j + w] - Z[j - w]) / st;
+      var nl = Math.sqrt(gx * gx + gy * gy + 1);
+      lightA[j] = (-gx * LX - gy * LY + LZ) / nl;
+    }
     var looks = [
-      { lit: "#c9c3df", dark: "#5c5f88" },
+      { lit: "#cdc7e2", dark: "#5c5f88" },
       { lit: "#fff3e8", dark: "#b18c9d" },
-      { lit: "#ffffff", dark: "#a5b5c9" }
+      { lit: "#ffffff", dark: "#a2b3c8" }
     ];
     cloudSprites = looks.map(function (look) {
       var c = document.createElement("canvas"); c.width = w; c.height = h;
       var g = c.getContext("2d"), img = g.createImageData(w, h), data = img.data;
       var Lc = hex(look.lit), Dc = hex(look.dark);
-      for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
-        var i = y * w + x, m = F.M[i];
-        var a = smooth(m, 0.4, 0.6);
-        if (a <= 0) continue;
-        var tone = m > 0.01 ? F.T[i] / m : 0.6;
-        var lightness = clamp(tone * 1.05 + 0.08 - (y / h) * 0.12, 0, 1);
-        var col = mixRGB(Dc, Lc, lightness);
-        var o = i * 4;
+      for (var i = 0; i < w * h; i++) {
+        var a = alphaA[i]; if (a <= 0) continue;
+        var yy = Math.floor(i / w) / h;
+        var lightness = clamp(0.5 + lightA[i] * 0.6 - yy * 0.22, 0, 1);
+        var col = mixRGB(Dc, Lc, lightness), o = i * 4;
         data[o] = col[0]; data[o + 1] = col[1]; data[o + 2] = col[2]; data[o + 3] = a * 252;
       }
       g.putImageData(img, 0, 0);
       return c;
     });
-    // the logo's own shadow, a soft stepped mound
-    var S = gridToField(LOGO_SHADOW, 3, 8, null);
-    boxBlur(S.M, S.w, S.h, 3, 3);
-    var s = document.createElement("canvas"); s.width = S.w; s.height = S.h;
-    var sg = s.getContext("2d"), simg = sg.createImageData(S.w, S.h), sd = simg.data;
-    for (var j = 0; j < S.w * S.h; j++) { sd[j * 4] = 10; sd[j * 4 + 1] = 18; sd[j * 4 + 2] = 34; sd[j * 4 + 3] = smooth(S.M[j], 0.15, 0.7) * 255; }
-    sg.putImageData(simg, 0, 0);
-    shadowSprite = s;
+    // the shadow's footprint is the cloud's own outline, kept as a small soft field
+    var fw = Math.ceil(w / 4), fh = Math.ceil(h / 4), F = new Float32Array(fw * fh);
+    for (var i3 = 0; i3 < w * h; i3++) F[((i3 / w | 0) >> 2) * fw + ((i3 % w) >> 2)] += alphaA[i3] / 16;
+    boxBlur(F, fw, fh, 1, 2);
+    shadowField = { w: fw, h: fh, A: F };
+  }
+
+  // The shadow on the Teton wall. It is worked out per frame over just the shadow's box: each
+  // point on the mountainside looks up its relief and catches the shadow from a little higher
+  // or lower, so the edges kink over the spurs and dip into the gullies.
+  var shCan = null, shG = null, shImg = null;
+  function fieldAt(Fd, fu, fv) {
+    if (fu < 0 || fv < 0 || fu >= Fd.w - 1 || fv >= Fd.h - 1) return 0;
+    var x0 = fu | 0, y0 = fv | 0, ax = fu - x0, ay = fv - y0, A = Fd.A, j = y0 * Fd.w + x0;
+    return (A[j] * (1 - ax) + A[j + 1] * ax) * (1 - ay) + (A[j + Fd.w] * (1 - ax) + A[j + Fd.w + 1] * ax) * ay;
+  }
+  function drawShadow(p, alpha, introY, shX, shY, shW, shH) {
+    var D = details[1];
+    if (!D || !D.rel || !shadowField || alpha <= 0.002) return;
+    var T = layerTransform(LAYERS[1], p), sc = T.s * (chh / H);
+    var ox = cw / 2 + T.tx, oy = chh + T.ty + introY;
+    var margin = 70 * sc, g = 2;
+    var x0 = Math.max(0, shX - shW * 0.55 - margin), x1 = Math.min(cw, shX + shW * 0.55 + margin);
+    var y0 = Math.max(0, shY - shH * 0.55 - margin), y1 = Math.min(chh, shY + shH * 0.55 + margin * 0.3);
+    if (x1 <= x0 || y1 <= y0) return;
+    var nw = Math.ceil((x1 - x0) / g), nh = Math.ceil((y1 - y0) / g);
+    if (!shCan) { shCan = document.createElement("canvas"); shG = shCan.getContext("2d"); }
+    if (shCan.width !== nw || shCan.height !== nh || !shImg) { shCan.width = nw; shCan.height = nh; shImg = shG.createImageData(nw, nh); }
+    var data = shImg.data, Fd = shadowField, rel = D.rel, rec = D.rec, du = D.u, dbw = D.bw, dbh = D.bh, dmin = D.minY;
+    var fx = Fd.w / shW, fy = Fd.h / shH, bx0 = shX - shW / 2, by0 = shY - shH / 2;
+    for (var iy = 0; iy < nh; iy++) {
+      var sy = y0 + (iy + 0.5) * g, dpy = Math.round(((sy - oy) / sc + H - dmin) * du);
+      var row = iy * nw * 4;
+      if (dpy < 0 || dpy >= dbh) { for (var q = 0; q < nw; q++) data[row + q * 4 + 3] = 0; continue; }
+      for (var ix = 0; ix < nw; ix++) {
+        var o = row + ix * 4, sx = x0 + (ix + 0.5) * g;
+        var dpx = Math.round(((sx - ox) / sc + W / 2) * du);
+        var di = dpy * dbw + dpx, r = dpx >= 0 && dpx < dbw ? rec[di] : 0;
+        if (!r) { data[o + 3] = 0; continue; }
+        var z = rel[di] * sc;
+        var cov = fieldAt(Fd, (sx - z * 0.3 - bx0) * fx, (sy + z * 0.75 - by0) * fy);
+        cov = smooth(cov, 0.08, 0.72);
+        data[o] = 18; data[o + 1] = 30; data[o + 2] = 62; data[o + 3] = cov * r * alpha;
+      }
+    }
+    shG.putImageData(shImg, 0, 0);
+    ctx.save();
+    applyLayer(T, introY);
+    ctx.clip(paths[1].land);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+    ctx.globalAlpha = 1;
+    ctx.drawImage(shCan, x0, y0, nw * g, nh * g);
+    ctx.restore();
   }
 
   // ---------- layout ----------
@@ -418,8 +482,8 @@
     var cwid = clamp(cw * 0.22, 190, 360) * (1 + 0.25 * k), chgt = cwid * CLOUD.h / CLOUD.w;
     var ccx = cw * (0.12 + 0.38 * k);
     var ctop = chh * (0.1 - 0.06 * k);
-    var shW = cwid * (1.0 + 0.35 * k), shH = shW * (0.16 + 0.1 * k);
-    var shX = ccx, shY = chh * (0.56 - 0.09 * k);
+    var shW = cwid * (1.05 + 0.35 * k), shH = shW * (0.34 + 0.06 * k);
+    var shX = ccx, shY = chh * (0.54 - 0.09 * k);
 
     for (var i = 0; i < LAYERS.length; i++) {
       var L = LAYERS[i], T = layerTransform(L, p);
@@ -447,14 +511,9 @@
       }
       if (i === 1) {
         // the cloud's shadow falls on the big ranges
-        ctx.save();
-        applyLayer(layerTransform(LAYERS[1], p), 0);
-        ctx.clip(paths[1].land);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
-        ctx.globalAlpha = (0.36 + 0.2 * k) * clamp(intro * 1.4 - 0.3, 0, 1) * (0.55 + 0.45 * l);
-        ctx.drawImage(shadowSprite, shX - shW / 2, shY - shH / 2, shW, shH);
-        ctx.restore();
+        var li1 = clamp(intro * 1.25 - 0.06, 0, 1);
+        drawShadow(p, (0.42 + 0.16 * k) * clamp(intro * 1.4 - 0.3, 0, 1) * (0.55 + 0.45 * l),
+          (1 - easeOut(li1)) * chh * 0.09, shX, shY, shW, shH);
       }
       if (i === 2) {
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
