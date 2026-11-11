@@ -337,34 +337,54 @@
     return t;
   }
   function buildCloud() {
-    var w = 512, h = 256, sc = 14.6, minX = 0.2, minY = -0.9;
-    var alphaA = new Float32Array(w * h), Z = new Float32Array(w * h), kk = 1.6;
+    // The logo cloud's layout with a smaller billow on each puff, then softened: the outline is
+    // pushed around by gentle turbulence and fades out at the edge, like a real fair-weather cloud.
+    var seed = 4321;
+    function rnd() { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }
+    function h2(ix, iy) { var h = (ix * 374761393 + iy * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+    function vn(x, y) {
+      var ix = Math.floor(x), iy = Math.floor(y), fx = x - ix, fy = y - iy, ux = fx * fx * (3 - 2 * fx), uy = fy * fy * (3 - 2 * fy);
+      var a = h2(ix, iy), b = h2(ix + 1, iy), c = h2(ix, iy + 1), d = h2(ix + 1, iy + 1);
+      return a + (b - a) * ux + (c - a) * uy + (a - b - c + d) * ux * uy;
+    }
+    var all = PUFFS.map(function (q) { return [q[0], q[1], q[2]]; });
+    for (var i = 0; i < PUFFS.length; i++) {
+      var q = PUFFS[i], ang = -Math.PI * (0.1 + 0.8 * rnd()), r = q[2] * (0.42 + 0.2 * rnd()), d = q[2] * (0.55 + 0.25 * rnd());
+      all.push([q[0] + Math.cos(ang) * d, q[1] + Math.sin(ang) * d * 0.9, r]);
+    }
+    var w = 512, h = 320, sc = 14, offX = -2.3, offY = -3.0;
+    var alphaA = new Float32Array(w * h), Z = new Float32Array(w * h), kk = 1.5;
     for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
-      var ux = x / sc + minX - 0.8, uy = y / sc + minY, cover = 0, sum = 0;
-      for (var k = 0; k < PUFFS.length; k++) {
-        var q = PUFFS[k], dx = (ux - q[0]) / q[2], dy = (uy - q[1]) / q[2], d2 = dx * dx + dy * dy;
-        var c = smooth(1 - Math.sqrt(d2), -0.012, 0.035);
+      var ux = x / sc + offX, uy = y / sc + offY;
+      var wx = ux + (vn(ux * 0.62, uy * 0.62) - 0.5) * 1.5 + (vn(ux * 1.7 + 9, uy * 1.7) - 0.5) * 0.5;
+      var wy = uy + (vn(ux * 0.62 + 31, uy * 0.62 + 5) - 0.5) * 1.5 + (vn(ux * 1.7, uy * 1.7 + 17) - 0.5) * 0.5;
+      var cover = 0, sum = 0;
+      for (var k = 0; k < all.length; k++) {
+        var p = all[k], dx = (wx - p[0]) / p[2], dy = (wy - p[1]) / p[2], d2 = dx * dx + dy * dy;
+        if (d2 >= 1.3) continue;
+        var c = smooth(1 - Math.sqrt(d2), -0.12, 0.22);
         if (c > cover) cover = c;
-        if (d2 < 1) sum += Math.exp(kk * q[2] * Math.sqrt(1 - d2));
+        if (d2 < 1) sum += Math.exp(kk * p[2] * Math.sqrt(1 - d2));
       }
       alphaA[y * w + x] = cover; Z[y * w + x] = sum > 0 ? Math.log(sum) / kk : 0;
     }
-    boxBlur(Z, w, h, 3, 2);
+    boxBlur(Z, w, h, 4, 2);
     var data = new Uint8Array(w * h * 4), LX = 0.45, LY = -0.75, LZ = 0.5, st = 2 / sc;
     for (var y2 = 1; y2 < h - 1; y2++) for (var x2 = 1; x2 < w - 1; x2++) {
       var j = y2 * w + x2, a = alphaA[j]; if (a <= 0) continue;
       var gx = (Z[j + 1] - Z[j - 1]) / st, gy = (Z[j + w] - Z[j - w]) / st, nl = Math.sqrt(gx * gx + gy * gy + 1);
-      var light = clamp(0.5 + (-gx * LX - gy * LY + LZ) / nl * 0.6 - (y2 / h) * 0.22, 0, 1), o = j * 4;
+      var uy2 = y2 / sc + offY;
+      var light = clamp(0.58 + (-gx * LX - gy * LY + LZ) / nl * 0.46 - (y2 / h) * 0.2 - smooth(uy2, 10.5, 15.5) * 0.15, 0, 1), o = j * 4;
       data[o] = data[o + 1] = data[o + 2] = light * 255; data[o + 3] = a * 255;
     }
-    cTex = tex2d(w, h, gl.RGBA, data, true);
+    cTex = tex2d(w, h, gl.RGBA, data, false);
     cloudAspect = h / w;
     // the shadow's footprint: the cloud's own outline, softened
-    var fw = 128, fh = 64, F = new Float32Array(fw * fh);
-    for (var i = 0; i < w * h; i++) F[((i / w | 0) >> 2) * fw + ((i % w) >> 2)] += alphaA[i] / 16;
+    var fw = 128, fh = 64, F = new Float32Array(fw * fh), bx = w / fw, by = h / fh;
+    for (var i3 = 0; i3 < w * h; i3++) F[Math.min(fh - 1, ((i3 / w | 0) / by) | 0) * fw + Math.min(fw - 1, ((i3 % w) / bx) | 0)] += alphaA[i3] / (bx * by);
     boxBlur(F, fw, fh, 2, 2);
     var sd = new Uint8Array(fw * fh);
-    for (var i2 = 0; i2 < fw * fh; i2++) sd[i2] = smooth(F[i2], 0.06, 0.8) * 255;
+    for (var i4 = 0; i4 < fw * fh; i4++) sd[i4] = smooth(F[i4], 0.06, 0.8) * 255;
     sTex = tex2d(fw, fh, gl.LUMINANCE, sd, true);
   }
 
