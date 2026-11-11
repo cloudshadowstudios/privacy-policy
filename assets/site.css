@@ -65,7 +65,9 @@ h1,h2,h3{font-family:var(--serif);font-weight:380;letter-spacing:-.015em;margin:
 /* ---------- the flight (hero) ---------- */
 .flight{position:relative;height:320vh;height:320svh;background:var(--slate)}
 .stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate;color:#fff}
-.scene{position:absolute;inset:0;width:100%;height:100%;display:block;background:#131b31}
+.stage{background:#1a2036 url(hero-poster.jpg) center/cover no-repeat}
+.scene{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.4s ease}
+.scene.on{opacity:1}
 
 .hero-copy{position:absolute;z-index:3;left:max(var(--gutter),(100vw - 1160px)/2);right:var(--gutter);top:clamp(96px,17vh,180px);
   opacity:var(--title-o,1);transform:translate3d(0,var(--title-y,0),0);text-shadow:0 2px 24px rgb(10 18 32 / .35)}
@@ -199,3 +201,15 @@ h3{font-size:clamp(1.7rem,3vw,2.2rem);line-height:1.1;font-weight:420}
 .doc ul.plain li{padding:12px 0;border-bottom:1px solid var(--line)}
 .doc-foot{border-top:1px solid var(--line);color:var(--muted);font-size:1rem}
 .doc-foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;padding-block:24px 44px;width:min(100% - 2*var(--gutter),720px)}
+
+/* additions: Daybreak row, game status, section reveal */
+.next-up{margin-top:clamp(40px,6vw,80px);border-bottom:1px solid var(--line)}
+.game .status{margin:22px 0 0;font-size:.82rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a5a12}
+@media (prefers-color-scheme:dark){.game .status{color:var(--gold)}}
+.game .status.quiet{color:var(--muted)}
+.game .status+h3{margin-top:6px}
+.game .meta{color:var(--muted)}
+.game .links{margin-top:16px}
+.js .rise{opacity:0;transform:translate3d(0,22px,0);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.7,.1,1)}
+.js .rise.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .rise{opacity:1;transform:none;transition:none}}

@@ -17,3 +17,7 @@ Fonts: Newsreader (headlines) and Atkinson Hyperlegible Next (text), self-hosted
 The site loads nothing from third parties: no analytics, ads or external fonts.
 
 After changing `assets/site.css` or `assets/flight.js`, bump the `?v=` value where the pages link to them so browsers load the new file instead of a cached copy.
+
+## The opening scene
+
+`assets/flight.js` draws the Teton Range in WebGL from real elevation data (USGS, via the public Mapzen/AWS terrain tiles), which is stored inside the script as a small text block. `assets/hero-poster.jpg` is the still image shown while the scene loads and wherever WebGL isn't available.
