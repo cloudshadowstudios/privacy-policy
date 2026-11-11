@@ -20,4 +20,4 @@ After changing `assets/site.css` or `assets/flight.js`, bump the `?v=` value whe
 
 ## The opening scene
 
-`assets/flight.js` draws the Teton Range in WebGL from real elevation data (USGS, via the public Mapzen/AWS terrain tiles), which is stored inside the script as a small text block. `assets/hero-poster.jpg` is the still image shown while the scene loads and wherever WebGL isn't available.
+`assets/flight.js` draws the Teton Range in WebGL from real elevation data (USGS, via the public Mapzen/AWS terrain tiles), which is stored inside the script as a small text block. `assets/hero-still.jpg` is the still image shown while the scene loads and wherever WebGL isn't available.
