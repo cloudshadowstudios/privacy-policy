@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cloudshadow Studios</title>
 <meta name="description" content="Cloudshadow Studios makes useful apps and games with the outdoors in mind, including Habitcrawl, Little Relay, Bog Blitz, Daybreak and Mountain Window.">
-<meta name="theme-color" content="#1c2b3a">
+<meta name="theme-color" content="#0a111c">
 <link rel="icon" href="assets/icon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/mark-180.png">
 <meta property="og:title" content="Cloudshadow Studios">
@@ -14,11 +14,11 @@
 <meta property="og:url" content="https://cloudshadowstudios.com/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preload" href="assets/fonts/newsreader-latin-opsz.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/site.css?v=alp10">
-<script src="assets/flight.js?v=alp10" defer></script>
+<link rel="stylesheet" href="assets/site.css?v=alp11">
+<script src="assets/flight.js?v=alp11" defer></script>
 </head>
 <body class="home">
-<a class="skip" href="#apps">Skip to content</a>
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="nav" id="nav">
   <div class="nav-in">
@@ -26,10 +26,10 @@
     <nav aria-label="Main">
       <ul>
         <li><a href="#apps">Apps</a></li>
-        <li><a href="#upcoming">Coming soon</a></li>
         <li><a href="#games">Games</a></li>
+        <li><a href="#upcoming">Coming soon</a></li>
         <li><a href="#studio">Studio</a></li>
-        <li><a href="#help">Help</a></li>
+        <li><a href="help/">Help</a></li>
       </ul>
     </nav>
   </div>
@@ -57,120 +57,90 @@
   <div class="flight-edge" aria-hidden="true"></div>
 </section>
 
-<main>
-  <section class="band" id="apps" aria-labelledby="apps-h">
+<main id="main">
+  <section class="shelf" id="apps" aria-labelledby="apps-h">
     <div class="wrap">
-      <header class="sec-head">
-        <h2 id="apps-h">Apps</h2>
-        <p>On the App Store now.</p>
+      <header class="shelf-head">
+        <p class="eyebrow">Out now</p>
+        <h2 id="apps-h">On the App Store</h2>
       </header>
-      <div class="apps">
-        <article class="app">
-          <div class="app-id">
-            <img class="icon pixel-art" src="assets/icons/habitcrawl.png" alt="Habitcrawl app icon" width="128" height="128">
-            <h3>Habitcrawl</h3>
-          </div>
-          <div class="app-body">
-            <p class="what">Most habit trackers give you a checkmark. Habitcrawl gives you a sword. Every habit you finish becomes a card, and each night your hero takes on one floor of the dungeon with the hand you built that day. Seven floors, one boss, every week.</p>
-            <p class="meta">For iPhone and Apple Watch. Works with Apple Health, Siri and Home Screen widgets. No ads, no account.</p>
-            <ul class="links">
-              <li><a class="store" href="https://apps.apple.com/us/app/habitcrawl/id6817175970">Get it on the App Store</a></li>
-              <li><a href="habitcrawl/support/">Support</a></li>
-              <li><a href="habitcrawl/privacy/">Privacy policy</a></li>
-              <li><a href="habitcrawl/terms/">Terms of use</a></li>
-            </ul>
-          </div>
-        </article>
-        <article class="app">
-          <div class="app-id">
-            <img class="icon" src="assets/icons/little-relay.png" alt="Little Relay app icon" width="128" height="128">
-            <h3>Little Relay</h3>
-          </div>
-          <div class="app-body">
-            <p class="what">A calm care journal for parents and caregivers, from pregnancy through toddlerhood. Log feeds, sleep and diapers with one thumb, see the patterns, and hand off care to a partner without the texts.</p>
-            <p class="meta">For iPhone and Apple Watch. Free to use, with a Family plan for shared care.</p>
-            <ul class="links">
-              <li><a class="store" href="https://apps.apple.com/us/app/little-relay/id6819379345">Get it on the App Store</a></li>
-              <li><a href="little-relay/support/">Support</a></li>
-              <li><a href="little-relay/privacy/">Privacy policy</a></li>
-              <li><a href="little-relay/terms/">Terms of use</a></li>
-            </ul>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
 
-  <section class="band tint" id="upcoming" aria-labelledby="upcoming-h">
-    <div class="wrap upcoming">
-      <div class="up-copy">
-        <header class="sec-head">
-          <h2 id="upcoming-h">Coming soon</h2>
-        </header>
-        <div class="app-id">
-          <img class="icon" src="assets/icons/mountain-window.png" alt="Mountain Window app icon" width="128" height="128">
-          <h3>Mountain Window</h3>
+      <article class="feature">
+        <div class="feature-copy">
+          <p class="eyebrow">iPhone and Apple Watch</p>
+          <h3>Habitcrawl</h3>
+          <p class="lede">Most habit trackers give you a checkmark. Habitcrawl gives you a sword.</p>
+          <p>Every habit you finish becomes a card, and each night your hero takes on one floor of the dungeon with the hand you built that day. Seven floors, one boss, every week.</p>
+          <p class="actions"><a class="btn primary" href="https://apps.apple.com/us/app/habitcrawl/id6817175970">Get it on the App Store</a><a class="more" href="habitcrawl/">More about Habitcrawl</a></p>
         </div>
-        <p class="what">Find the best weather window for your next outing. Pick a place and an activity, like hiking, mountain biking, camping or paragliding, and Mountain Window ranks the hours ahead by rain, wind, temperature and daylight. It also tells you when to leave and what to pack.</p>
-        <p class="meta">For iPhone, iPad and Mac, with Home Screen widgets. Mountain forecasts include freezing level, summit wind and storm potential.</p>
-        <img class="widget" src="assets/games/mountain-window-widget.webp" alt="Weather Window widget showing the best three-hour hiking window in Chamonix, tomorrow 9 AM to 12 PM, with the top three windows ranked" width="784" height="396" loading="lazy">
-      </div>
-      <div class="phone-tall"><img src="assets/games/mountain-window-today.webp" alt="Mountain Window’s Today screen for Chamonix, showing the summit forecast and the Before you go checklist" width="600" height="1304" loading="lazy"></div>
-    </div>
-    <div class="wrap">
-      <article class="app next-up">
-        <div class="app-id">
-          <img class="icon" src="assets/icons/daybreak.png" alt="Daybreak app icon" width="128" height="128" loading="lazy">
-          <h3>Daybreak</h3>
+        <div class="feature-art glow-violet"><img class="big-icon pixel-art" src="assets/icons/habitcrawl.png" alt="Habitcrawl app icon" width="256" height="256" loading="lazy"></div>
+      </article>
+
+      <article class="feature flip">
+        <div class="feature-copy">
+          <p class="eyebrow">iPhone and Apple Watch</p>
+          <h3>Little Relay</h3>
+          <p class="lede">A calm care journal for parents and caregivers, from pregnancy through toddlerhood.</p>
+          <p>Log feeds, sleep and diapers with one thumb, see the patterns, and hand off care to a partner without the texts.</p>
+          <p class="actions"><a class="btn primary" href="https://apps.apple.com/us/app/little-relay/id6819379345">Get it on the App Store</a><a class="more" href="little-relay/">More about Little Relay</a></p>
         </div>
-        <div class="app-body">
-          <p class="what">A fasting timer with an alpine feel. Start a fast, follow it from your Lock Screen or Apple Watch, and keep your history, water and plan in step across your devices with iCloud.</p>
-          <p class="meta">For iPhone and Apple Watch, with widgets and Live Activities. Pay once for the Summit Pass, no subscription. No accounts, ads or tracking.</p>
-          <ul class="links">
-            <li><a href="daybreak/">Support</a></li>
-            <li><a href="daybreak/privacy/">Privacy policy</a></li>
-          </ul>
-        </div>
+        <div class="feature-art glow-green"><img class="big-icon" src="assets/icons/little-relay.png" alt="Little Relay app icon" width="256" height="256" loading="lazy"></div>
       </article>
     </div>
   </section>
 
-  <section class="band" id="games" aria-labelledby="games-h">
+  <section class="shelf deep" id="games" aria-labelledby="games-h">
     <div class="wrap">
-      <header class="sec-head">
-        <h2 id="games-h">Games</h2>
-        <p>For iPhone.</p>
-      </header>
-      <div class="games">
-        <article class="game">
-          <div class="phone"><img src="assets/games/bog-blitz-title.webp" alt="Bog Blitz title screen: a mountain biker on a lakeside trail under the Bog Blitz logo" width="1434" height="660" loading="lazy"></div>
-          <p class="status">Arriving on the App Store</p>
-          <h3>Bog Blitz</h3>
-          <p>Ride, paddle, fly. A retro obstacle run across three sports: mountain bike the trails, kayak the rapids, then leave the waterfall in a wingsuit. 68 hand-made levels and a new Daily Trail every day.</p>
-          <p class="meta">Free to play, with one purchase to unlock everything. No ads, no subscriptions.</p>
-          <ul class="links">
+      <article class="feature wide">
+        <div class="feature-copy">
+          <p class="eyebrow">Arriving on the App Store · iPhone</p>
+          <h3 id="games-h">Bog Blitz</h3>
+          <p class="lede">Ride, paddle, fly. A retro obstacle run across three sports.</p>
+          <p>Mountain bike the trails, kayak the rapids, then leave the waterfall in a wingsuit. 68 hand-made levels and a new Daily Trail every day. Free to play, with one purchase to unlock everything.</p>
+          <p class="actions">
             <!-- Once Bog Blitz is live on the App Store, remove these comment marks:
-            <li><a class="store" href="https://apps.apple.com/app/id6829145265">Get it on the App Store</a></li> -->
-            <li><a href="bog-blitz/">About the game</a></li>
-            <li><a href="bog-blitz/support/">Support</a></li>
-            <li><a href="bog-blitz/privacy/">Privacy policy</a></li>
-          </ul>
+            <a class="btn primary" href="https://apps.apple.com/app/id6829145265">Get it on the App Store</a> -->
+            <a class="more" href="bog-blitz/">More about Bog Blitz</a></p>
+        </div>
+        <div class="feature-art"><div class="phone"><img src="assets/games/bog-blitz-title.webp" alt="Bog Blitz title screen: a mountain biker on a lakeside trail under the Bog Blitz logo" width="1434" height="660" loading="lazy"></div></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="shelf" id="upcoming" aria-labelledby="soon-h">
+    <div class="wrap">
+      <header class="shelf-head">
+        <p class="eyebrow">On the way</p>
+        <h2 id="soon-h">Coming soon</h2>
+      </header>
+      <div class="cards">
+        <article class="card">
+          <div class="card-art art-dawn"><img class="icon" src="assets/icons/daybreak.png" alt="Daybreak app icon" width="128" height="128" loading="lazy"><img class="peek" src="assets/games/daybreak-fast.webp" alt="Daybreak’s timer screen, 17 hours into a 16:8 fast with the goal reached" width="322" height="700" loading="lazy"></div>
+          <h3>Daybreak</h3>
+          <p>A fasting timer with an alpine feel. Follow a fast from your Lock Screen or Apple Watch. Pay once, no subscription.</p>
+          <p class="tag">iPhone and Apple Watch</p>
         </article>
-        <article class="game">
-          <div class="phone"><img src="assets/games/wildline-title.webp" alt="Wildline title screen: a runner on a trail below Yosemite’s granite walls, with the Wildline badge and the main menu" width="1434" height="660" loading="lazy"></div>
-          <p class="status quiet">In development</p>
+        <article class="card">
+          <div class="card-art art-shot"><img src="assets/games/mountain-window-widget.webp" alt="Mountain Window widget ranking the best hiking windows in Chamonix" width="784" height="396" loading="lazy"></div>
+          <h3>Mountain Window</h3>
+          <p>Find the best weather window for your next outing, ranked hour by hour, with when to leave and what to pack.</p>
+          <p class="tag">iPhone, iPad and Mac</p>
+        </article>
+        <article class="card">
+          <div class="card-art art-shot cover"><img src="assets/games/wildline-title.webp" alt="Wildline title screen: a runner on a trail below Yosemite’s granite walls" width="1434" height="660" loading="lazy"></div>
           <h3>Wildline</h3>
-          <p>A side-scrolling parkour run through America’s national parks. Two buttons and real moves: kong vaults, wall runs, tic-tacs and rolls, through rain, snow, dusk and full moons.</p>
+          <p>A side-scrolling parkour run through America’s national parks. Two buttons and real moves, through rain, snow, dusk and full moons.</p>
+          <p class="tag">In development · iPhone</p>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="band studio" id="studio" aria-labelledby="studio-h">
+  <section class="shelf studio" id="studio" aria-labelledby="studio-h">
     <div class="wrap studio-in">
       <div class="studio-copy">
-        <h2 id="studio-h">The studio</h2>
-        <p class="studio-lead">A cloud’s shadow is even less real than the cloud. Sun, air, water and the shape of the land all have to come together for it to exist, and for a moment it travels freely over mountains and valleys before it’s gone.</p>
+        <p class="eyebrow">The studio</p>
+        <h2 id="studio-h" class="studio-lead">A cloud’s shadow is even less real than the cloud. Sun, air, water and the shape of the land all have to come together for it to exist, and for a moment it travels freely over mountains and valleys before it’s gone.</h2>
         <p>That’s what we named the studio after.</p>
         <p>We make two kinds of things. Everyday apps that take a small job off your plate, like keeping a habit going or keeping track of a newborn’s night. And apps and games about the places we’d rather be: a weather window for a big day out, a parkour run through the national parks, a bike, a kayak and a wingsuit.</p>
         <p>Your information stays on your own devices and in your own iCloud. None of our apps or games have ads or tracking.</p>
@@ -180,40 +150,12 @@
       </figure>
     </div>
   </section>
-
-  <section class="band" id="help" aria-labelledby="help-h">
-    <div class="wrap help">
-      <div>
-        <h2 id="help-h">Help and privacy</h2>
-        <p class="help-note">Found a bug or have an idea? Email us with your iPhone model and the app version. We usually reply within 2 business days.</p>
-        <p><a class="email" href="mailto:support@cloudshadowstudios.com">support@cloudshadowstudios.com</a></p>
-      </div>
-      <dl class="help-list">
-        <div class="row">
-          <dt>Habitcrawl</dt>
-          <dd><a href="habitcrawl/support/">Support</a><a href="habitcrawl/privacy/">Privacy policy</a><a href="habitcrawl/terms/">Terms of use</a></dd>
-        </div>
-        <div class="row">
-          <dt>Little Relay</dt>
-          <dd><a href="little-relay/support/">Support</a><a href="little-relay/privacy/">Privacy policy</a><a href="little-relay/terms/">Terms of use</a></dd>
-        </div>
-        <div class="row">
-          <dt>Daybreak</dt>
-          <dd><a href="daybreak/">Support</a><a href="daybreak/privacy/">Privacy policy</a></dd>
-        </div>
-        <div class="row">
-          <dt>Bog Blitz</dt>
-          <dd><a href="bog-blitz/support/">Support</a><a href="bog-blitz/privacy/">Privacy policy</a></dd>
-        </div>
-      </dl>
-    </div>
-  </section>
 </main>
 
 <footer class="foot">
-  <div class="foot-ridge" aria-hidden="true"></div>
   <div class="wrap foot-in">
     <a class="brand" href="./"><img src="assets/logo-cloud.svg" alt="" width="34" height="25"><span>Cloudshadow Studios</span></a>
+    <nav class="foot-links" aria-label="Footer"><a href="help/">Help and privacy</a><a href="mailto:support@cloudshadowstudios.com">support@cloudshadowstudios.com</a></nav>
     <p>© 2026 Cloudshadow Studios. This site has no ads, analytics or tracking.</p>
   </div>
 </footer>
