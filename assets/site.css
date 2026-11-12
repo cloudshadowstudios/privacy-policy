@@ -266,3 +266,8 @@ h3{font-size:clamp(1.7rem,3vw,2.2rem);line-height:1.1;font-weight:420}
   .feature-art{min-height:0;padding-block:20px}
   .cards{grid-template-columns:1fr}
 }
+.glow-dawn::before{background:radial-gradient(closest-side,#a2587c,transparent)}
+.feature-art .phone-tall{position:relative;z-index:1;width:clamp(200px,20vw,260px)}
+.feature-art .phone-tall img{aspect-ratio:322/700}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:860px){.cards.two{grid-template-columns:1fr}}
