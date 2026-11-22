@@ -271,3 +271,10 @@ h3{font-size:clamp(1.7rem,3vw,2.2rem);line-height:1.1;font-weight:420}
 .feature-art .phone-tall img{aspect-ratio:322/700}
 .cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 @media (max-width:860px){.cards.two{grid-template-columns:1fr}}
+.art-photo,.art-remote{position:relative;display:block}
+.art-photo .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.85) brightness(.72)}
+.art-photo .icon,.art-remote .icon{position:absolute;left:9%;top:50%;width:26%;transform:translateY(-50%);box-shadow:0 0 0 1px #ffffff30,0 18px 36px -12px #000a}
+.art-photo .peek{position:absolute;right:10%;top:12%;width:32%;border-radius:14px;box-shadow:0 0 0 4px #15181e,0 0 0 5px #3b3f47,0 24px 40px -10px #000c}
+.art-remote{background:radial-gradient(120% 90% at 70% 20%,#23345c,#0b1220)}
+.art-remote .icon{left:6%;top:8%;width:19%;transform:none;z-index:2}
+.art-remote .widget{position:absolute;right:6%;bottom:9%;width:74%;border-radius:18px;box-shadow:0 0 0 1px #ffffff1a,0 24px 40px -14px #000}
